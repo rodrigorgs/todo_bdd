@@ -1,12 +1,11 @@
-import 'package:myfloor/dbprovider.dart';
-import 'package:myfloor/repository.dart';
+import 'repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'domain.dart';
 
 part 'service.g.dart';
 
 class TaskListService {
-  final TaskDao taskDao;
+  final TaskPreferences taskDao;
 
   TaskListService({required this.taskDao});
 
@@ -23,16 +22,15 @@ class TaskListService {
   }
 
   void editTask(Task task, {String? description, bool? completed}) {
-    final newTask = Task(description ?? task.description,
-        completed: completed ?? task.completed, id: task.id);
-    taskDao.updateTask(newTask);
+    final newTask = task.copyWith(
+        description: description ?? task.description,
+        completed: completed ?? task.completed);
+    taskDao.updateTask(task, newTask);
   }
 }
 
 @Riverpod(keepAlive: true)
 TaskListService taskListService(TaskListServiceRef ref) {
-  final db = ref.watch(dbProvider).value!;
-  return TaskListService(taskDao: db.taskDao);
+  final prefs = ref.watch(taskPreferencesProvider);
+  return TaskListService(taskDao: prefs);
 }
-
-// final taskListServiceProvider = Provider((ref) => TaskListService());

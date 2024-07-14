@@ -1,49 +1,46 @@
-// dao/Task_dao.dart
+import 'dart:convert';
 
-import 'package:floor/floor.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'domain.dart';
 
-@dao
-abstract class TaskDao {
-  @Query('SELECT * FROM Task')
-  Future<List<Task>> findAllTasks();
+part 'repository.g.dart';
 
-  @Query('SELECT name FROM Task')
-  Stream<List<String>> findAllTasksName();
+class TaskPreferences {
+  Future<List<Task>> findAllTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    final tasksStringList = prefs.getStringList('tasks') ?? [];
+    return tasksStringList.map((e) => Task.fromJsonString(e)).toList();
+  }
 
-  @Query('SELECT * FROM Task WHERE id = :id')
-  Stream<Task?> findTaskById(int id);
+  Future<void> insertTask(Task task) async {
+    final prefs = await SharedPreferences.getInstance();
+    final tasksString = prefs.getStringList('tasks') ?? [];
+    tasksString.add(json.encode(task.toJson()));
+    prefs.setStringList('tasks', tasksString);
+  }
 
-  @insert
-  Future<void> insertTask(Task task);
+  Future<void> deleteTask(Task task) async {
+    final prefs = await SharedPreferences.getInstance();
+    final tasksString = prefs.getStringList('tasks') ?? [];
+    tasksString.removeWhere((t) => Task.fromJsonString(t) == task);
+    prefs.setStringList('tasks', tasksString);
+  }
 
-  @delete
-  Future<void> deleteTask(Task task);
-
-  @update
-  Future<void> updateTask(Task task);
+  Future<void> updateTask(Task oldTask, Task newTask) async {
+    final prefs = await SharedPreferences.getInstance();
+    final tasksString = prefs.getStringList('tasks') ?? [];
+    final index =
+        tasksString.indexWhere((t) => Task.fromJsonString(t) == oldTask);
+    if (index != -1) {
+      tasksString[index] = json.encode(newTask.toJson());
+      prefs.setStringList('tasks', tasksString);
+    }
+  }
 }
 
-// class TaskPreferences {
-//   Future<List<Task>> findAllTasks() async {
-//     final prefs = await SharedPreferences.getInstance();
-//     final tasksString = prefs.getStringList('tasks') ?? [];
-//     return tasksString.map((e) => Task.fromJson(e)).toList();
-//   }
-
-//   @Query('SELECT name FROM Task')
-//   Stream<List<String>> findAllTasksName() {}
-
-//   @Query('SELECT * FROM Task WHERE id = :id')
-//   Stream<Task?> findTaskById(int id) {}
-
-//   @insert
-//   Future<void> insertTask(Task task) {}
-
-//   @delete
-//   Future<void> deleteTask(Task task) {}
-
-//   @update
-//   Future<void> updateTask(Task task) {}
-// }
+@Riverpod(keepAlive: true)
+TaskPreferences taskPreferences(TaskPreferencesRef ref) {
+  return TaskPreferences();
+}

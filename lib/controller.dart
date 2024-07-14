@@ -1,7 +1,7 @@
 import 'service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'domain.dart';
-// import 'service.dart';
 
 part 'controller.g.dart';
 

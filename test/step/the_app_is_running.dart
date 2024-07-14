@@ -1,16 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:myfloor/database.dart';
-import 'package:myfloor/dbprovider.dart';
 import 'package:myfloor/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> theAppIsRunning(WidgetTester tester) async {
-  final db = await $FloorAppDatabase.inMemoryDatabaseBuilder().build();
-  // final db = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+  SharedPreferences.setMockInitialValues({});
   await tester.pumpWidget(
-    ProviderScope(
-      overrides: [dbProvider.overrideWith((ref) => db)],
-      child: const MainApp(),
+    const ProviderScope(
+      child: MainApp(),
     ),
   );
   await tester.pumpAndSettle();

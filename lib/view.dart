@@ -107,9 +107,7 @@ class TaskListWidget extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () {
-                ref
-                    .read(taskListControllerProvider.notifier)
-                    .removeTask(l[index]);
+                _showDeleteTaskDialog(context, ref, l[index]);
               },
             ),
             IconButton(
@@ -150,6 +148,34 @@ class TaskListWidget extends ConsumerWidget {
                     .editTask(task, description: newDescription);
                 Navigator.pop(context);
               },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDeleteTaskDialog(BuildContext context, WidgetRef ref, Task task) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Task'),
+          content: Text(
+              'Are you sure you want to delete task "${task.description}"?'),
+          actions: [
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              onPressed: () {
+                ref.read(taskListControllerProvider.notifier).removeTask(task);
+                Navigator.pop(context);
+              },
+              child: const Text('Delete'),
             ),
           ],
         );
