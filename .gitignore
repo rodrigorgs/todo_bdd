@@ -45,3 +45,6 @@ app.*.map.json
 # SQLite
 web/sqlite3.wasm
 web/sqflite_sw.js
+
+# Test coverage
+coverage/

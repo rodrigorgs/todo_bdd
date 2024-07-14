@@ -14,7 +14,11 @@ class TaskListService {
   }
 
   Future<void> addTask(Task task) async {
-    taskDao.insertTask(task);
+    try {
+      await taskDao.insertTask(task);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> removeTask(Task task) async {

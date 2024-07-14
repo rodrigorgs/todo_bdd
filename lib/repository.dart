@@ -15,6 +15,10 @@ class TaskPreferences {
   }
 
   Future<void> insertTask(Task task) async {
+    final taskList = await findAllTasks();
+    if (taskList.any((t) => t.description == task.description)) {
+      throw TaskException('Task already exists');
+    }
     final prefs = await SharedPreferences.getInstance();
     final tasksString = prefs.getStringList('tasks') ?? [];
     tasksString.add(json.encode(task.toJson()));

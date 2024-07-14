@@ -12,19 +12,18 @@ class TaskListController extends _$TaskListController {
     return ref.read(taskListServiceProvider).tasks;
   }
 
-  Future<void> addTask(Task task) async {
+  Future<bool> addTask(Task task) async {
     state = const AsyncValue.loading();
 
     final taskService = ref.read(taskListServiceProvider);
     try {
-      // state = AsyncValue.data([...state.value!, task]);
       await taskService.addTask(task);
+      return Future.value(true);
     } catch (e) {
-      state = AsyncValue.error(e, StackTrace.current);
-      return;
+      return Future.value(false);
+    } finally {
+      state = AsyncValue.data(await taskService.tasks);
     }
-
-    state = AsyncValue.data(await taskService.tasks);
   }
 
   Future<void> removeTask(Task task) async {

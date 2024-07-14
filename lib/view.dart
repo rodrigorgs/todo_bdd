@@ -45,18 +45,23 @@ class MainPage extends ConsumerWidget {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 if (newTaskDescription.isNotEmpty) {
-                  ref
+                  bool result = await ref
                       .read(taskListControllerProvider.notifier)
                       .addTask(Task(newTaskDescription));
-                  // setState(() {
-                  //   tasks.add(TodoTask(
-                  //     description: newTaskDescription,
-                  //     completed: false,
-                  //   ));
-                  // });
-                  Navigator.pop(context);
+                  if (context.mounted) {
+                    if (!result) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'The task was not created because it was a duplicate'),
+                        ),
+                      );
+                    }
+
+                    Navigator.pop(context);
+                  }
                 }
               },
               child: const Text('Create'),

@@ -1,5 +1,4 @@
-
-Feature: Change task status
+Feature: Edit task
 
     Scenario: Mark a task as completed
         Given the app is running
@@ -14,6 +13,14 @@ Feature: Change task status
         When I mark the task {"Buy milk"} as {'pending'}
         Then the task {"Buy milk"} is {'pending'}
 
+    Scenario: Change task description
+        Given the app is running
+            And I add a task {"aaa"}
+            And I add a task {"Buy milk"}
+            And I add a task {"bbb"}
+        When I change the task {"Buy milk"} to {"Buy milk and eggs"}
+        Then I see {"Buy milk and eggs"} text
+
 Feature: Add task
     
         Scenario: Add a task
@@ -21,6 +28,12 @@ Feature: Add task
             When I add a task {"Buy milk"}
             Then I see {"Buy milk"} text
             And the task {"Buy milk"} is {'pending'}
+
+        Scenario: Add a duplicate task
+            Given the app is running
+                And I add a task {"Buy milk"}
+            When I add a task {"Buy milk"}
+            Then I see {"Buy milk"} text exactly {1} times
 
 Feature: List tasks
 
@@ -37,11 +50,3 @@ Feature: Delete task
             And I add a task {"Sleep"}
         When I delete the task {"Buy milk"}
         Then I don't see {"Buy milk"} text
-
-Feature: Add task
-
-    Scenario: Add a task
-    
-        Given the app is running
-        When I add a task {"Buy milk"}
-        Then I see {"Buy milk"} text

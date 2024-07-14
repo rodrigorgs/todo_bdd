@@ -1,10 +1,6 @@
 import 'dart:convert';
 
-import 'package:floor/floor.dart';
-
-@entity
 class Task {
-  @primaryKey
   int? id;
 
   String description;
@@ -49,4 +45,15 @@ class Task {
 
   @override
   int get hashCode => Object.hash(description, completed);
+}
+
+class TaskException implements Exception {
+  final String message;
+
+  TaskException(this.message);
+
+  @override
+  String toString() {
+    return message;
+  }
 }
