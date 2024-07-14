@@ -113,7 +113,14 @@ class TaskTile extends ConsumerWidget {
     final l = asyncValue.asData!.value;
 
     return ListTile(
-        title: Text(l[index].description),
+        title: Text(
+          l[index].description,
+          style: l[index].completed
+              ? TextStyle(
+                  decoration: TextDecoration.lineThrough,
+                  color: Colors.grey[600])
+              : null,
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

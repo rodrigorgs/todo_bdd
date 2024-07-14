@@ -11,6 +11,7 @@ import './step/the_task_is.dart';
 import './step/i_change_the_task_to.dart';
 import './step/i_see_text.dart';
 import './step/i_see_text_exactly_times.dart';
+import './step/i_see_the_tasks_in_order.dart';
 import './step/i_delete_the_task.dart';
 import './step/i_dont_see_text.dart';
 
@@ -56,6 +57,13 @@ void main() {
     testWidgets('''Empty list''', (tester) async {
       await theAppIsRunning(tester);
       await iSeeText(tester, "No tasks found");
+    });
+    testWidgets('''Completed tasks go to the bottom''', (tester) async {
+      await theAppIsRunning(tester);
+      await iAddATask(tester, "First");
+      await iAddATask(tester, "Second");
+      await iMarkTheTaskAs(tester, "First", 'completed');
+      await iSeeTheTasksInOrder(tester, ["Second", "First"]);
     });
   });
   group('''Delete task''', () {

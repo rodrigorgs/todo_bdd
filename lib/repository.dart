@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,7 +12,15 @@ class TaskPreferences {
   Future<List<Task>> findAllTasks() async {
     final prefs = await SharedPreferences.getInstance();
     final tasksStringList = prefs.getStringList('tasks') ?? [];
-    return tasksStringList.map((e) => Task.fromJsonString(e)).toList();
+    var taskList = tasksStringList.map((e) => Task.fromJsonString(e)).toList();
+    mergeSort(taskList, compare: (a, b) {
+      if (a.completed == b.completed) {
+        return 0;
+      } else {
+        return a.completed ? 1 : -1;
+      }
+    });
+    return taskList;
   }
 
   Future<void> insertTask(Task task) async {

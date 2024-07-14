@@ -41,6 +41,14 @@ Feature: List tasks
         Given the app is running
         Then I see {"No tasks found"} text
 
+    Scenario: Completed tasks go to the bottom
+        Given the app is running
+            And I add a task {"First"}
+            And I add a task {"Second"}
+            And I mark the task {"First"} as {'completed'}
+        Then I see the tasks {["Second", "First"]} in order
+
+
 Feature: Delete task
 
     Scenario: Delete a task
