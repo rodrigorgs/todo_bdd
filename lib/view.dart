@@ -30,6 +30,7 @@ class MainPage extends ConsumerWidget {
         return AlertDialog(
           title: const Text('Create Task'),
           content: TextField(
+            autofocus: true,
             onChanged: (value) {
               newTaskDescription = value;
             },
@@ -87,16 +88,30 @@ class TaskListWidget extends ConsumerWidget {
           : ListView.builder(
               itemCount: l.length,
               itemBuilder: (context, index) {
-                return _createTaskView(l, index, ref, context);
+                return TaskTile(index: index);
               },
             ),
       error: (o, s) => Text('Error: $o'),
       loading: () => const CircularProgressIndicator(),
     );
   }
+}
 
-  ListTile _createTaskView(
-      List<Task> l, int index, WidgetRef ref, BuildContext context) {
+class TaskTile extends ConsumerWidget {
+  final int index;
+  const TaskTile({
+    super.key,
+    required this.index,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncValue = ref.watch(taskListControllerProvider);
+    if (asyncValue.hasError) {
+      return const Placeholder();
+    }
+    final l = asyncValue.asData!.value;
+
     return ListTile(
         title: Text(l[index].description),
         trailing: Row(
