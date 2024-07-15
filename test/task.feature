@@ -1,3 +1,30 @@
+Feature: List tasks
+
+    Scenario: Empty list
+        Given the app is running
+        Then I see {"No tasks found"} text
+
+    Scenario: Completed tasks go to the bottom
+        Given the app is running
+            And I add a task {"First"}
+            And I add a task {"Second"}
+            And I mark the task {"First"} as {'completed'}
+        Then I see the tasks {["Second", "First"]} in order
+
+Feature: Add task
+    
+        Scenario: Add a task
+            Given the app is running
+            When I add a task {"Buy milk"}
+            Then I see {"Buy milk"} text
+                And the task {"Buy milk"} is {'pending'}
+
+        Scenario: Add a duplicate task
+            Given the app is running
+                And I add a task {"Buy milk"}
+            When I add a task {"Buy milk"}
+            Then I see {"Buy milk"} text exactly {1} times
+
 Feature: Edit task
 
     Scenario: Mark a task as completed
@@ -20,34 +47,6 @@ Feature: Edit task
             And I add a task {"bbb"}
         When I change the task {"Buy milk"} to {"Buy milk and eggs"}
         Then I see {"Buy milk and eggs"} text
-
-Feature: Add task
-    
-        Scenario: Add a task
-            Given the app is running
-            When I add a task {"Buy milk"}
-            Then I see {"Buy milk"} text
-            And the task {"Buy milk"} is {'pending'}
-
-        Scenario: Add a duplicate task
-            Given the app is running
-                And I add a task {"Buy milk"}
-            When I add a task {"Buy milk"}
-            Then I see {"Buy milk"} text exactly {1} times
-
-Feature: List tasks
-
-    Scenario: Empty list
-        Given the app is running
-        Then I see {"No tasks found"} text
-
-    Scenario: Completed tasks go to the bottom
-        Given the app is running
-            And I add a task {"First"}
-            And I add a task {"Second"}
-            And I mark the task {"First"} as {'completed'}
-        Then I see the tasks {["Second", "First"]} in order
-
 
 Feature: Delete task
 
