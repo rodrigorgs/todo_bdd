@@ -13,17 +13,17 @@ Feature: List tasks
 
 Feature: Add task
     
-        Scenario: Add a task
-            Given the app is running
-            When I add a task {"Buy milk"}
-            Then I see {"Buy milk"} text
-                And the task {"Buy milk"} is {'pending'}
+    Scenario: Add a task
+        Given the app is running
+        When I add a task {"Buy milk"}
+        Then I see {"Buy milk"} text
+            And the task {"Buy milk"} is {'pending'}
 
-        Scenario: Add a duplicate task
-            Given the app is running
-                And I add a task {"Buy milk"}
-            When I add a task {"Buy milk"}
-            Then I see {"Buy milk"} text exactly {1} times
+    Scenario: Add a duplicate task
+        Given the app is running
+            And I add a task {"Buy milk"}
+        When I add a task {"Buy milk"}
+        Then I see {"Buy milk"} text exactly {1} times
 
 Feature: Edit task
 
