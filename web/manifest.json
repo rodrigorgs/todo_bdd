@@ -1,6 +1,6 @@
 {
-    "name": "myfloor",
-    "short_name": "myfloor",
+    "name": "todo_bdd",
+    "short_name": "todo_bdd",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
