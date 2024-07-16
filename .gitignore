@@ -48,3 +48,7 @@ web/sqflite_sw.js
 
 # Test coverage
 coverage/
+
+# Auto-generated
+*.g.dart
+task_test.dart
